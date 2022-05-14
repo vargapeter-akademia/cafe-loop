@@ -8,13 +8,7 @@
 </head>
 <body>
 
-<h1>Üdvözlő oldal</h1>
-
-<p>
-	<a href="registration.jsp">Regisztráció</a>
-	<a href="login.jsp">Bejelentkezés</a>
-	<a href="logout">Kijelentkezés</a>
-</p>
+<h1>Bejelentkezés</h1>
 
 </body>
 </html>
