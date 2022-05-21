@@ -8,21 +8,25 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import hu.ak.generics.cafeloop.bo.Customer;
+import javax.sql.DataSource;
 
+import hu.ak.generics.cafeloop.bo.Customer;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class CustomerDao implements Dao<Customer> {
 
-	private final DatabaseProvider provider = DatabaseProvider.getInstance();
+	private final DataSource dataSource;
 
 	private static final String INSERT_SQL = "INSERT INTO customer(email, name, pw, salt) values(?, ?, ?, ?);";
 	
 	public Customer create(Customer entity) {
-		try (Connection connection = provider.getConnection();
+		try (Connection connection = dataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setString(1, entity.getEmail());
 			ps.setString(2, entity.getName());
 			ps.setString(3, entity.getPassword());
-			ps.setInt(4, entity.getSalt());
+			ps.setString(4, entity.getSalt());
 			
 			int updatedRows = ps.executeUpdate();
 			
@@ -51,13 +55,51 @@ public class CustomerDao implements Dao<Customer> {
 	}
 
 	public Customer update(Customer entity) {
-		// TODO Auto-generated method stub
-		return null;
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement ps = connection.prepareStatement("update customer set email = ?, name = ?, pw = ? where id = ?;")) {
+			ps.setString(1, entity.getEmail());
+			ps.setString(2, entity.getName());
+			ps.setString(3, entity.getPassword());
+			ps.setInt(4, entity.getId());
+			
+			// Itt lehetne ellenőrizni, hogy megfelelően updatelődött egy sor
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return entity;
 	}
 
 	public void deleteById(int id) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	private Customer extractCustomer(ResultSet rs) throws SQLException {
+		Customer customer = new Customer();
+		customer.setId(rs.getInt("id"));
+		customer.setEmail(rs.getString("email"));
+		customer.setName(rs.getString("name"));
+		customer.setPassword(rs.getString("pw"));
+		customer.setSalt(rs.getString("salt"));
+		
+		return customer;
+	}
+
+	public Optional<Customer> getCustomerByEmail(String email) throws SQLException {
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select * from customer where email = ?;")) {
+			
+			ps.setString(1, email);
+			
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return Optional.of(extractCustomer(rs));
+				}
+			}
+		}
+		
+		return Optional.empty();
 	}
 
 }

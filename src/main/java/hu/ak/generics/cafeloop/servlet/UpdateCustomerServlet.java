@@ -1,54 +1,48 @@
 package hu.ak.generics.cafeloop.servlet;
 
 import java.io.IOException;
-import java.security.SecureRandom;
+import java.rmi.ServerError;
+import java.sql.SQLException;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import hu.ak.generics.cafeloop.bo.Customer;
 import hu.ak.generics.cafeloop.dao.CustomerDao;
 import hu.ak.generics.cafeloop.dao.Dao;
-import hu.ak.generics.cafeloop.util.SecurityUtils;
 
-public class RegistrationServlet extends HttpServlet {
-	
-	// Dependency injection / az Inversion of Control megvalósítása
-	
+public class UpdateCustomerServlet extends HttpServlet {
+
 	@Resource(name = "jdbc/mysql")
 	private DataSource dataSource;
-	
+
 	private Dao<Customer> customerDao;
-	
+
 	@Override
 	public void init() throws ServletException {
 		customerDao = new CustomerDao(dataSource);
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String name = req.getParameter("name");
-		String password = req.getParameter("password");
+
 		String email = req.getParameter("email");
-		
-		// TODO ellenőrzés: email egyedisége, email formátuma
-		
-		Customer customer = new Customer();
+		String name = req.getParameter("name");
+
+		HttpSession session = req.getSession();
+		Customer customer = (Customer) session.getAttribute("loggedInCustomer");
+
 		customer.setEmail(email);
 		customer.setName(name);
-		
-		byte[] salt = SecureRandom.getSeed(16);
-		String encryptedPassword = SecurityUtils.encryptPassword(password, salt);
-		customer.setPassword(encryptedPassword);
-		customer.setSalt(SecurityUtils.encodeSalt(salt));
-		
-		Customer createdCustomer = customerDao.create(customer);
-		
-		resp.sendRedirect("login.jsp?email=" + email);
-	}
 
+		customerDao.update(customer);
+
+		resp.sendRedirect(req.getContextPath() + "/customer-center/profile.jsp");
+
+	}
 }

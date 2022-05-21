@@ -1,5 +1,6 @@
 package hu.ak.generics.cafeloop.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
