@@ -9,14 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Frequency {
 
-	private int id;
-	private String name;
-	private String email;
-	private String password;
-	private String salt;
-
-	// TODO hozzájárulások
+    private int id;
+    private String name;
 
 }

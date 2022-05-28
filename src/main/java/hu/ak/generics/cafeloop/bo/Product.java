@@ -1,5 +1,6 @@
 package hu.ak.generics.cafeloop.bo;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,14 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Product {
 
-	private int id;
-	private String name;
-	private String email;
-	private String password;
-	private String salt;
-
-	// TODO hozzájárulások
+    private int id;
+    private String name;
+    private int price;
+    private String description;
+    private String imagePath;
 
 }

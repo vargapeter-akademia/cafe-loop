@@ -10,15 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb1da48c-0694-4b85-a230-f1611238ba56" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/util/SecurityUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/bo/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/bo/Customer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/dao/CustomerDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/dao/CustomerDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/dao/Dao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/dao/Dao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/servlet/RegistrationServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/servlet/RegistrationServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/listener/DatabaseInitListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hu/ak/generics/cafeloop/listener/DatabaseInitListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/customer-center/profile.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/customer-center/profile.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/fragments/navbar.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/fragments/navbar.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/registration.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/registration.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,9 +29,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jsp File" />
         <option value="JavaScript File" />
         <option value="Class" />
+        <option value="Jsp File" />
       </list>
     </option>
   </component>
@@ -63,26 +63,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last.edited.regexp": "",
-    "last_opened_file_path": "C:/Dev/JavaGenericsWorkspace/cafe-loop",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last.edited.regexp&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Dev/JavaGenericsWorkspace/cafe-loop&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ],
-    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
-      "MySQL"
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
+      &quot;MySQL&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Dev\JavaGenericsWorkspace\cafe-loop\src\main\webapp\META-INF" />
@@ -95,6 +96,7 @@
     <configuration name="Tomcat 9.0.62" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.62" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="BROWSER_ID" value="1823116a-c8ca-4eef-98d5-f46e9307e58a" />
       <option name="SHOW_DIALOG_ON_UPDATE" value="false" />
+      <option name="UPDATING_POLICY" value="update-resources" />
       <deployment>
         <artifact name="cafe-loop:war exploded">
           <settings>
@@ -104,6 +106,7 @@
       </deployment>
       <server-settings>
         <option name="BASE_DIRECTORY_NAME" value="db3174c8-1fef-4ab8-b0d0-fb1dc4446d67" />
+        <option name="PRESERVE_SESSIONS" value="true" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -193,6 +196,10 @@
       <workItem from="1652898800059" duration="636000" />
       <workItem from="1652976356513" duration="8081000" />
       <workItem from="1653068115752" duration="5490000" />
+      <workItem from="1653227324361" duration="14100000" />
+      <workItem from="1653498549221" duration="5068000" />
+      <workItem from="1653586106967" duration="5485000" />
+      <workItem from="1653671996317" duration="4473000" />
     </task>
     <servers />
   </component>

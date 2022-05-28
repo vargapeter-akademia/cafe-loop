@@ -9,14 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
-
-	private int id;
-	private String name;
-	private String email;
-	private String password;
-	private String salt;
-
-	// TODO hozzájárulások
-
+public class SubscriptionItem {
+    private int id;
+    private Product product;
+    private int quantity;
+    private Subscription subscription;
 }
