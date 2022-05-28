@@ -27,6 +27,7 @@ erDiagram
         int customer_id FK "NOT NULL"
         date subscription_date "DEFAULT CURRENT_DATE()"
         int frequency_id FK "NOT NULL"
+        string address
     }
     
     subscription }O--|| frequency: frequency
@@ -38,6 +39,7 @@ erDiagram
         int id PK "AUTO INCREMENT"
         int product_id FK "NOT NULL"
         int subscription_id FK "NOT NULL"
+        int quantity
     }
 
 ```
