@@ -64,6 +64,16 @@
 		<servlet-name>UpdateCustomerServlet</servlet-name>
 		<url-pattern>/customer-center/update</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>SelectProductServlet</servlet-name>
+		<servlet-class>hu.ak.generics.cafeloop.servlet.SelectProductServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>SelectProductServlet</servlet-name>
+		<url-pattern>/customer-center/select-product</url-pattern>
+	</servlet-mapping>
 
 	<filter>
 		<filter-name>SecurityFilter</filter-name>
