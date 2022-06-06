@@ -13,5 +13,6 @@ public class Frequency {
 
     private int id;
     private String name;
+    private String code;
 
 }

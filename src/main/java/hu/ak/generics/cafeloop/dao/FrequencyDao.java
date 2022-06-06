@@ -21,8 +21,9 @@ public class FrequencyDao implements Dao<Frequency> {
     @Override
     public Frequency create(Frequency entity) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("insert into frequency(name) values(?);", Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = connection.prepareStatement("insert into frequency(name, code) values(?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, entity.getName());
+            ps.setString(2, entity.getCode());
 
             ps.executeUpdate();
 
@@ -59,6 +60,7 @@ public class FrequencyDao implements Dao<Frequency> {
         Frequency frequency = new Frequency();
         frequency.setId(rs.getInt("id"));
         frequency.setName(rs.getString("name"));
+        frequency.setCode(rs.getString("code"));
 
         return frequency;
     }
