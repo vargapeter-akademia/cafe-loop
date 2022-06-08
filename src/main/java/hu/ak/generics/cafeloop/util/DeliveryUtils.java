@@ -56,7 +56,7 @@ public final class DeliveryUtils {
         return LocalDate.from(DayOfWeek.MONDAY.adjustInto(referenceDate.plusWeeks(1)));
     }
 
-    public LocalDate getNextDeliveryDay(String frequencyCode) {
+    public static LocalDate getNextDeliveryDay(String frequencyCode) {
         return DeliveryFrequency.valueOf(frequencyCode).calculateNextDeliveryDay(LocalDate.now());
     }
 

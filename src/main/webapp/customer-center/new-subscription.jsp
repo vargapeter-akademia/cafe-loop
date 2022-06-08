@@ -64,7 +64,7 @@
                 <div id="subscription" class="tab-pane fade in active">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form action="/customer-center/new-subscription" method="post">
+                            <form action="${pageContext.request.contextPath}/customer-center/new-subscription" method="post">
                                 <div class="input-group">
                                     <span class="input-group-addon">Cím</span>
                                     <input class="form-control" name="address" required
@@ -85,7 +85,7 @@
                                     Első szállítási nap: <%=DeliveryUtils.nextMonday(LocalDate.now())%>
                                 </div>
 
-                                <button type="submit" class="btn btn-lg btn-block bg-1" disabled="${empty sessionScope.selectedProducts}">
+                                <button type="submit" class="btn btn-lg btn-block bg-1" ${empty sessionScope.selectedProducts ? "disabled" : ""}>
                                     Új előfizetés elküldése
                                 </button>
 

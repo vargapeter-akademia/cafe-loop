@@ -75,6 +75,26 @@
 		<url-pattern>/customer-center/select-product</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>UnsubscribeServlet</servlet-name>
+		<servlet-class>hu.ak.generics.cafeloop.servlet.UnsubscribeServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UnsubscribeServlet</servlet-name>
+		<url-pattern>/customer-center/unsubscribe</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>NewSubscriptionServlet</servlet-name>
+		<servlet-class>hu.ak.generics.cafeloop.servlet.NewSubscriptionServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>NewSubscriptionServlet</servlet-name>
+		<url-pattern>/customer-center/new-subscription</url-pattern>
+	</servlet-mapping>
+
 	<filter>
 		<filter-name>SecurityFilter</filter-name>
 		<filter-class>hu.ak.generics.cafeloop.filter.SecurityFilter</filter-class>

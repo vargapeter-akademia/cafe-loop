@@ -40,7 +40,7 @@ public class NewSubscriptionServlet extends HttpServlet {
 
         HttpSession session = req.getSession();
         Customer loggedInCustomer = (Customer) session.getAttribute("loggedInCustomer");
-        Map<Integer, Integer> selectedProducts = (Map<Integer, Integer>) session.getAttribute("selectedProducts");
+        Map<Integer, SubscriptionItem> selectedProducts = (Map<Integer, SubscriptionItem>) session.getAttribute("selectedProducts");
 
         Subscription subscriptionPrototype = Subscription.builder()
                 .address(address)
@@ -50,24 +50,29 @@ public class NewSubscriptionServlet extends HttpServlet {
 
         Subscription subscription = subscriptionDao.create(subscriptionPrototype);
 
-        for (Entry<Integer, Integer> selectedProductIdAndQuantity : selectedProducts.entrySet()) {
+        for (Entry<Integer, SubscriptionItem> selectedProductIdAndQuantity : selectedProducts.entrySet()) {
             Integer productId = selectedProductIdAndQuantity.getKey();
-            Integer quantity = selectedProductIdAndQuantity.getValue();
+            SubscriptionItem subscriptionItem = selectedProductIdAndQuantity.getValue();
+            int quantity = subscriptionItem.getQuantity();
 
-            Product product = Product.builder()
-                    .id(productId)
-                    .build();
+            if (quantity > 0) {
+                Product product = Product.builder()
+                        .id(productId)
+                        .build();
 
-            SubscriptionItem item = SubscriptionItem.builder()
-                    .product(product)
-                    .subscription(subscription)
-                    .quantity(quantity)
-                    .build();
+                SubscriptionItem item = SubscriptionItem.builder()
+                        .product(product)
+                        .subscription(subscription)
+                        .quantity(quantity)
+                        .build();
 
-            subscriptionItemDao.create(item);
+                subscriptionItemDao.create(item);
+            }
         }
 
-        resp.sendRedirect(req.getContextPath() + "/index.jsp");
+        session.setAttribute("selectedProducts", null);
+
+        resp.sendRedirect(req.getContextPath() + "/customer-center/subscriptions.jsp");
 
     }
 }

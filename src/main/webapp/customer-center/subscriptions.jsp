@@ -1,4 +1,5 @@
 <%@ page import="hu.ak.generics.cafeloop.util.DeliveryUtils" %>
+<%@ page import="hu.ak.generics.cafeloop.util.DateUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
@@ -25,7 +26,7 @@
 </div>
 
 <sql:query var="subscriptions" dataSource="jdbc/mysql">
-    select subscription.id as id, subscription_date, address, frequency.code as frequency_code
+    select subscription.id as id, subscription_date, address, code
     from subscription
     join frequency on subscription.frequency_id = frequency.id
     where customer_id = ?;
@@ -33,35 +34,42 @@
 </sql:query>
 
 <div class="container container-fluid">
-    <ul class="list-group">
-        <c:forEach var="subscription" items="${subscriptions.rows}">
-            <jsp:useBean id="deliveryUtils" scope="session" type="hu.ak.generics.cafeloop.util.DeliveryUtils"/>
+    <c:forEach var="subscription" items="${subscriptions.rows}">
 
-            <sql:query var="products" dataSource="jdbc/mysql">
-                select product.name, subscription_item.quantity
-                from subscription_item
-                join product on product.id = subscription_item.product_id
-                where subscription_id = ?;
-                <sql:param value="${subscription.id}"/>
-            </sql:query>
+        <sql:query var="products" dataSource="jdbc/mysql">
+            select product.name, subscription_item.quantity, subscription_item.quantity * product.price "price_per_product"
+            from subscription_item
+            join product on product.id = subscription_item.product_id
+            where subscription_id = ?;
+            <sql:param value="${subscription.id}"/>
+        </sql:query>
 
-            <p>Termékek</p>
-            <li class="list-group-item">
-                <h3>${subscription.subscription_date}</h3>
+        <sql:query var="totalPrice" dataSource="jdbc/mysql">
+            select sum(price * quantity) as total_price
+            from subscription_item
+            join product on subscription_item.product_id = product.id
+            where subscription_item.subscription_id = ?;
+            <sql:param value="${subscription.id}"/>
+        </sql:query>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">${subscription.id}-${subscription.subscription_date}</div>
+            <div class="panel-body">
+                <p>Termékek</p>
                 <ul>
                     <c:forEach var="product" items="${products.rows}">
-                        <li>${product.name} - ${product.quantity} csomag</li>
+                        <li>${product.name} - ${product.quantity} csomag (${product.price_per_product} Forint)</li>
                     </c:forEach>
                 </ul>
-            </li>
 
-            <p>Következő szállítási napok</p>
-            <ul>
-                ${deliveryUtils.getNextDeliveryDay(subscription.frequency_code)}
-            </ul>
-
-        </c:forEach>
-    </ul>
+                <p>Következő szállítási nap: ${DateUtils.formatDateWithDayName(DeliveryUtils.getNextDeliveryDay(subscription.code))}</p>
+                <p>Fizetendő: ${totalPrice.rows[0].total_price} Forint</p>
+                <a href="${pageContext.request.contextPath}/customer-center/unsubscribe?id=${subscription.id}" class="btn btn-danger" role="button">
+                    Előfizetés lemondása
+                </a>
+            </div>
+        </div>
+    </c:forEach>
 </div>
 
 
