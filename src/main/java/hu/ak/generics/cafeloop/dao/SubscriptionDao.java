@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SubscriptionDao implements Dao<Subscription> {
 
-    private static final String INSERT_INTO_SUBSCRIPTION = "insert into subscription(customer_id, frequency_id, subscription_date) VALUES(?, ?, ?)";
+    private static final String INSERT_INTO_SUBSCRIPTION = "insert into subscription(customer_id, frequency_id, subscription_date, address) VALUES(?, ?, ?, ?)";
 
     private final DataSource dataSource;
 
@@ -31,6 +31,7 @@ public class SubscriptionDao implements Dao<Subscription> {
             ps.setInt(1, entity.getCustomer().getId());
             ps.setInt(2, entity.getFrequency().getId());
             ps.setDate(3, Date.valueOf(LocalDate.now()));
+            ps.setString(4, entity.getAddress());
 
             ps.executeUpdate();
 

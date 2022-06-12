@@ -1,3 +1,5 @@
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="hu.ak.generics.cafeloop.util.DeliveryUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
@@ -41,21 +43,15 @@
     from product;
 </sql:query>
 
-<sql:query var="products" dataSource="jdbc/mysql">
-    select id, name, price, description, image_path
-    from product;
-</sql:query>
-
-<sql:query var="products" dataSource="jdbc/mysql">
-    select id, name, price, description, image_path
-    from product;
+<sql:query var="frequencies" dataSource="jdbc/mysql">
+    select id, name
+    from frequency;
 </sql:query>
 
 <div class="container container-fluid">
 
 
     <div class="row">
-
         <div class="col-md-8">
             <h2 class="text-muted">Előfizetés adatai</h2>
 
@@ -68,7 +64,7 @@
                 <div id="subscription" class="tab-pane fade in active">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form action="/customer-center/new-subscription" method="post">
+                            <form action="${pageContext.request.contextPath}/customer-center/new-subscription" method="post">
                                 <div class="input-group">
                                     <span class="input-group-addon">Cím</span>
                                     <input class="form-control" name="address" required
@@ -85,9 +81,14 @@
                                     </select>
                                 </div>
                                 <br>
+                                <div>
+                                    Első szállítási nap: <%=DeliveryUtils.nextMonday(LocalDate.now())%>
+                                </div>
 
-                                <button type="submit" class="btn btn-lg btn-block bg-1" title="">Új előfizetés elküldése
+                                <button type="submit" class="btn btn-lg btn-block bg-1" ${empty sessionScope.selectedProducts ? "disabled" : ""}>
+                                    Új előfizetés elküldése
                                 </button>
+
                             </form>
                         </div>
                     </div>
@@ -115,7 +116,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-addon">Mennyiség</span>
                                                 <input class="form-control" type="number" name="quantity"
-                                                       value="${sessionScope.selectedProducts.get(product.id)}">
+                                                       value="${empty sessionScope.selectedProducts.get(product.id) ? 0 : sessionScope.selectedProducts.get(product.id).quantity}">
                                                 <div class="input-group-btn">
                                                     <button class="btn btn-link" type="submit">
                                                         <i class="glyphicon glyphicon-plus"></i>
@@ -126,30 +127,40 @@
                                             <br>
                                         </form>
                                     </div>
-
                                 </div>
                             </li>
-
                         </c:forEach>
                     </ul>
-
-
                 </div>
             </div>
-
         </div>
 
         <div class="col-md-4">
-            <h2 class="text-muted">Megrendelendő termékek</h2>
+            <h2 class="text-muted"><i class="fa fa-shopping-cart"></i> Kosár</h2>
             <ul class="list-group mb-3">
-                <c:forEach items="${sessionScope.selectedProducts}" var="selectedProduct">
-                    <li class="list-group-item">
-                        <b>${selectedProduct.key}</b>
-                        <small class="text-muted">3500 Forint</small>
-                        <span class="badge">${selectedProduct.value} csomag</span>
-                    </li>
-                </c:forEach>
-                <li class="list-group-item">Összesen: <b>19600 Forint</b></li>
+
+                <c:choose>
+                    <c:when test="${empty sessionScope.selectedProducts}">
+                        <li class="list-group-item"><small class="text-muted text-center">Nincs kiválasztva termék</small></li>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${sessionScope.selectedProducts}" var="selectedProduct">
+                            <li class="list-group-item">
+                                <b>${selectedProduct.value.product.name}</b>
+                                <small class="text-muted">${selectedProduct.value.product.price} Forint</small>
+                                <span class="badge">${selectedProduct.value.quantity} csomag</span>
+                            </li>
+                        </c:forEach>
+                        <li class="list-group-item">Alapdíj összesen: <b id="total-cost">${sessionScope.totalCost}</b> Forint</li>
+                        <script>
+                            var totalCostElement = document.getElementById('total-cost');
+                            const totalCost = parseInt(totalCostElement.innerText);
+                            const numberFormatter = Intl.NumberFormat('hu-HU');
+                            const formatted = numberFormatter.format(totalCost);
+                            totalCostElement.innerText = formatted;
+                        </script>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </div>
 
