@@ -3,6 +3,9 @@ package hu.ak.generics.cafeloop.listener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -50,7 +53,8 @@ public class DatabaseInitListener implements ServletContextListener {
     private static final String CREATE_FREQUENCY_TABLE_SQL = """
             create table if not exists frequency (
                 id int primary key auto_increment,
-                name varchar(255) not null unique
+                name varchar(255) not null unique,
+                code varchar(255) not null unique
             );
              """;
 
@@ -124,10 +128,10 @@ public class DatabaseInitListener implements ServletContextListener {
 
         logger.info("Initializing frequencies");
 
-        Frequency twiceAWeek = frequencyDao.create(Frequency.builder().name("Heti kétszer").build());
-        Frequency onceAWeek = frequencyDao.create(Frequency.builder().name("Heti egyszer").build());
-        Frequency everyOtherWeek = frequencyDao.create(Frequency.builder().name("Minden második héten").build());
-        Frequency monthly = frequencyDao.create(Frequency.builder().name("Havonta egyszer").build());
+        Frequency twiceAWeek = frequencyDao.create(Frequency.builder().name("Heti kétszer").code("FIRST_MONDAY_OF_EACH_MONTH").build());
+        Frequency onceAWeek = frequencyDao.create(Frequency.builder().name("Heti egyszer").code("EACH_MONDAY").build());
+        Frequency everyOtherWeek = frequencyDao.create(Frequency.builder().name("Minden második héten").code("EVERY_OTHER_MONDAY").build());
+        Frequency monthly = frequencyDao.create(Frequency.builder().name("Havonta egyszer").code("EACH_MONDAY_AND_THURSDAY").build());
 
         logger.info("Initializing products");
 
@@ -144,7 +148,7 @@ public class DatabaseInitListener implements ServletContextListener {
                 .name("Robusta Fantasy")
                 .price(2500)
                 .description("Ízében minimális savassággal, a csokoládé és karamell tónusai dominálnak, mely a szárított fügére emlékeztet.")
-                .imagePath("coffee-sample.jpg")
+                .imagePath("coffee-sample-2.jpeg")
                 .build();
 
         robustaFantasy = productDao.create(robustaFantasy);
@@ -153,13 +157,47 @@ public class DatabaseInitListener implements ServletContextListener {
                 .name("Robusta Harmony")
                 .price(2750)
                 .description("Ízében a friss trópusi gyümölcsök édes tónusai dominálnak tejcsokoládéval és nádcukorral kombinálva.")
-                .imagePath("coffee-sample.jpg")
+                .imagePath("coffee-sample-3.jpeg")
                 .build();
 
         robustaHarmony = productDao.create(robustaHarmony);
 
+        createDummySubscription("Budapest, Fraknó utca 99.", monthly, testElek, Map.of(robustaFantasy, 3), subscriptionDao, subscriptionItemDao);
+        createDummySubscription("Budapest, Királyfürdő utca 128.", everyOtherWeek, testElek, Map.of(robustaFantasy, 10), subscriptionDao, subscriptionItemDao);
+        createDummySubscription("Budapest, Fraknó utca 99.", twiceAWeek, testElek, Map.of(arabicaElite, 1, robustaHarmony, 5), subscriptionDao, subscriptionItemDao);
+
         logger.info("Database init finished");
 
+    }
+
+    private void createDummySubscription(
+            String address,
+            Frequency frequency,
+            Customer customer,
+            Map<Product, Integer> products,
+            Dao<Subscription> subscriptionDao,
+            Dao<SubscriptionItem> subscriptionItemDao
+    ) {
+         Subscription subscriptionPrototype = Subscription.builder()
+                .address(address)
+                .frequency(frequency)
+                .customer(customer)
+                .build();
+
+        Subscription subscription = subscriptionDao.create(subscriptionPrototype);
+
+        for (Entry<Product, Integer> productEntry : products.entrySet()) {
+            Integer quantity = productEntry.getValue();
+
+
+            SubscriptionItem item = SubscriptionItem.builder()
+                    .product(productEntry.getKey())
+                    .subscription(subscription)
+                    .quantity(quantity)
+                    .build();
+
+            subscriptionItemDao.create(item);
+        }
     }
 
 

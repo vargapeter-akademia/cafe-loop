@@ -1,3 +1,5 @@
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="hu.ak.generics.cafeloop.util.DeliveryUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
@@ -18,71 +20,151 @@
 <%@include file="../fragments/navbar.jsp" %>
 
 <div class="container-fluid bg-1 text-center">
-    <img src="${pageContext.request.contextPath}/images/logo-big.png" class="img-responsive img-circle" style="display:inline;" width="150" height="150">
+    <img src="${pageContext.request.contextPath}/images/logo-big.png" class="img-responsive img-circle"
+         style="display:inline;" width="150" height="150">
     <h2>Új előfizetés</h2>
 </div>
 
+<script>
+
+    function chooseProduct(id, quantity) {
+        $.post(
+            '${pageContext.request.contextPath}/customer-center/select-product',
+            {id: id, quantity: quantity},
+            (data, status) => {
+
+            }
+        )
+    }
+</script>
+
+<sql:query var="products" dataSource="jdbc/mysql">
+    select id, name, price, description, image_path
+    from product;
+</sql:query>
+
+<sql:query var="frequencies" dataSource="jdbc/mysql">
+    select id, name
+    from frequency;
+</sql:query>
+
 <div class="container container-fluid">
 
-	<sql:query var="products" dataSource="jdbc/mysql">
-		select id, name, price, description, image_path from product;
-	</sql:query>
-			
-	<h2>Termékek kiválasztása</h2>
-			
-	<div class="panel panel-default">
-		<div class="panel-body">
-		
-			<c:forEach items="${products.rows}" var="product">
-			
-				<form action="select-product" method="get">
-					
-					<h3>${product.name}</h3>
-					<p>${product.description}</p>
-					
-					<div class="input-group">
-						<span class="input-group-addon">Mennyiség</span>
-					  <input class="form-control" type="number" name="quantity" value="${sessionScope.selectedProducts.get(product.id)}">
-					  <input name="productId" value="${product.id}" hidden>
-					</div><br>
-					
-					<button type="submit" class="btn btn-lg btn-block bg-1" title="">Termék kiválasztása</button>
-					
-				</form>
-			
-			</c:forEach>
-			
-		</div>
-	</div>
-	
 
-<form action="new-subscription" method="post">
-	
-	<div class="panel panel-default">
-		<div class="panel-body">
-			<div class="input-group">
-				<span class="input-group-addon">Cím</span>
-				<input class="form-control" name="address" required placeholder="1027. Budapest Gipsz Jakab utca 4.">
-			</div><br>
-			
-			<sql:query var="frequencies" dataSource="jdbc/mysql">
-				select id, name from frequency;	
-			</sql:query>
-			
-			<div class="input-group">
-				<span class="input-group-addon">Szállítás gyakorisága</span>
-			  <select class="form-control" name="frequencyId">
-			  	<c:forEach items="${frequencies.rows}" var="freq">
-			    	<option value="${freq.id}">${freq.name}</option>
-			    </c:forEach>
-			  </select>
-			</div><br>
-				
-			<button type="submit" class="btn btn-lg btn-block bg-1" title="">Új előfizetés elküldése</button>
-			</div>
-		</div>
-</form>
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="text-muted">Előfizetés adatai</h2>
 
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#subscription">Szállítás</a></li>
+                <li><a data-toggle="tab" href="#catalog">Termék katalógus</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="subscription" class="tab-pane fade in active">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form action="${pageContext.request.contextPath}/customer-center/new-subscription" method="post">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Cím</span>
+                                    <input class="form-control" name="address" required
+                                           placeholder="1027. Budapest Gipsz Jakab utca 4.">
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">Szállítás gyakorisága</span>
+                                    <select class="form-control" name="frequencyId">
+                                        <c:forEach items="${frequencies.rows}" var="freq">
+                                            <option value="${freq.id}">${freq.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <br>
+                                <div>
+                                    Első szállítási nap: <%=DeliveryUtils.nextMonday(LocalDate.now())%>
+                                </div>
+
+                                <button type="submit" class="btn btn-lg btn-block bg-1" ${empty sessionScope.selectedProducts ? "disabled" : ""}>
+                                    Új előfizetés elküldése
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="catalog" class="tab-pane fade">
+
+                    <ul class="list-group">
+                        <c:forEach items="${products.rows}" var="product">
+
+                            <li class="list-group-item">
+
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        <img class="img-thumbnail"
+                                             src="${pageContext.request.contextPath}/images/${product.image_path}">
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <form action="${pageContext.request.contextPath}/customer-center/select-product"
+                                              method="get">
+
+                                            <h3>${product.name} (${product.price} Ft / csomag)</h3>
+                                            <p>${product.description}</p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Mennyiség</span>
+                                                <input class="form-control" type="number" name="quantity"
+                                                       value="${empty sessionScope.selectedProducts.get(product.id) ? 0 : sessionScope.selectedProducts.get(product.id).quantity}">
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-link" type="submit">
+                                                        <i class="glyphicon glyphicon-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <input name="productId" value="${product.id}" hidden>
+                                            </div>
+                                            <br>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <h2 class="text-muted"><i class="fa fa-shopping-cart"></i> Kosár</h2>
+            <ul class="list-group mb-3">
+
+                <c:choose>
+                    <c:when test="${empty sessionScope.selectedProducts}">
+                        <li class="list-group-item"><small class="text-muted text-center">Nincs kiválasztva termék</small></li>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${sessionScope.selectedProducts}" var="selectedProduct">
+                            <li class="list-group-item">
+                                <b>${selectedProduct.value.product.name}</b>
+                                <small class="text-muted">${selectedProduct.value.product.price} Forint</small>
+                                <span class="badge">${selectedProduct.value.quantity} csomag</span>
+                            </li>
+                        </c:forEach>
+                        <li class="list-group-item">Alapdíj összesen: <b id="total-cost">${sessionScope.totalCost}</b> Forint</li>
+                        <script>
+                            var totalCostElement = document.getElementById('total-cost');
+                            const totalCost = parseInt(totalCostElement.innerText);
+                            const numberFormatter = Intl.NumberFormat('hu-HU');
+                            const formatted = numberFormatter.format(totalCost);
+                            totalCostElement.innerText = formatted;
+                        </script>
+                    </c:otherwise>
+                </c:choose>
+            </ul>
+        </div>
+
+    </div>
 
 </div>
 

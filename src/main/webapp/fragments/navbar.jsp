@@ -18,7 +18,7 @@
 								<li><a href="${pageContext.request.contextPath}/customer-center/profile.jsp">
                                     <i class="fa fa-user"></i> <c:out value="${sessionScope.loggedInCustomer.name}"/>
                                 </a></li>
-								<li><a href="${pageContext.request.contextPath}/customer-center/subsciptions.jsp">Előfizetések</a></li>
+								<li><a href="${pageContext.request.contextPath}/customer-center/subscriptions.jsp">Előfizetések</a></li>
 								<li><a href="${pageContext.request.contextPath}/customer-center/new-subscription.jsp">Új
 										előfizetés</a></li>
 
